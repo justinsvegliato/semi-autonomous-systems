@@ -29,13 +29,13 @@ if __name__ == '__main__':
         text = text.split("\\")[0]
         text = text[2:len(text)]
         text = text.rstrip('\n')
-        print('Received response: %s' % text)
+        print('Received a response: %s' % text)
         
         if text is 'action':
             print('Received an action request')
             action = random.choice(ACTIONS) 
             sock.sendto(bytearray('%d\0' % action, 'utf-8'), client_address)
-            print('Selected action: %s' % action)
+            print('Selected an action: %s' % action)
 
         if text is 'stop':
             print('Received a stop request')

@@ -32,10 +32,13 @@ if __name__ == '__main__':
         print('Received response: %s' % text)
         
         if text is 'action':
+            print('Received an action request')
             action = random.choice(ACTIONS) 
             sock.sendto(bytearray('%d\0' % action, 'utf-8'), client_address)
+            print('Selected action: %s' % action)
 
         if text is 'stop':
+            print('Received a stop request')
             is_active = False 
             sock.sendto(bytearray('Stopping...', 'utf-8'), client_address)
 

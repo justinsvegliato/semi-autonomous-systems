@@ -1,47 +1,48 @@
-import random
+# TODO: Should imports go on one line?
 import socket
+import json
+import request_handler
+import ssp_generator
+from mdp import RTDP
 
-IP = '127.0.0.1'
-PORT = 5010
-
-LEFT = -1
-STRAIGHT = 0
-RIGHT = 1
-ACTIONS = [LEFT, STRAIGHT, RIGHT] 
+IP_ADDRESS = '127.0.0.1'
+PORT = 8000
+GRAPH_FILE = 'graphs/generic-world-graph.json'
 
 if __name__ == '__main__':
-    print('Starting server...')
+    print('Starting the planning service...')
+    socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socket.bind((IP_ADDRESS, PORT))
+    socket.listen(1)
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind((IP, PORT))
+    print('Reading graph data...')
+    with open(GRAPH_FILE) as file:
+        graph = json.load(file)
 
-    action = 0
-    is_active = True 
+    print("Generating SSP...")
+    ssp = ssp_generator.generate(graph, 1, 5)
 
-    while is_active:
-        print('Waiting for connection...')
-        response = sock.recvfrom(1024)
-        data = response[0]
-        client_address = response[1]
-        
-        text = str(data)
-        text = text.split("\\")[0]
-        text = text[2:len(text)]
-        text = text.rstrip('\n')
-        print('Received a response: %s' % text)
-        
-        if text is 'action':
-            print('Received an action request')
-            action = random.choice(ACTIONS) 
-            sock.sendto(bytearray('%d\0' % action, 'utf-8'), client_address)
-            print('Selected an action: %s' % action)
+    print("Retrieving policy...")
+    rtdp = RTDP(trials=5)
+    policy = ssp.solve(solver=rtdp)
 
-        if text is 'stop':
-            print('Received a stop request')
-            is_active = False 
-            sock.sendto(bytearray('Stopping...', 'utf-8'), client_address)
+    print "Policy"
+    print policy
 
-    print('Terminating server...')
-    sock.close()
+    print('Waiting for a connection...')
+    (connection, address) = socket.accept()
 
+    print('Entering action loop...')
+    while True:
+        request = json.loads(connection.recv(1024))
+        print('Received request: %s' % str(request))
+
+        response = request_handler.handle(request)
+        connection.sendall(response)
+        print('Sent response: %s' % str(response))
+
+    print('Closing the connection...')
+    connection.close()
+
+    print('Terminating the planning service...')
+    socket.close()

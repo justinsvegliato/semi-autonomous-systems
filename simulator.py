@@ -4,6 +4,7 @@ import time
 
 SERVICE_IP_ADDRESS = '127.0.0.1'
 SERVICE_PORT = 8000
+# test comment
 
 if __name__ == '__main__':
     print('Starting the simulator...')

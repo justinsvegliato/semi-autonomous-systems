@@ -1,31 +1,27 @@
 import socket
 import json
-import time
 
-SERVICE_IP_ADDRESS = '127.0.0.1'
-SERVICE_PORT = 8000
+IP_ADDRESS = '127.0.0.1'
+PORT = 8000
 
-if __name__ == '__main__':
+def main():
     print('Starting the simulator...')
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((IP_ADDRESS, PORT))
+    server.listen(1)
 
-    print('Connecting to the planning service...')
-    socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    socket.connect((SERVICE_IP_ADDRESS, SERVICE_PORT))
+    print('Waiting for a connection...')
+    (connection, ip_address) = server.accept()
 
     while True:
-        print('Sending a request...')
-        request = json.dumps({
-            'type': 'action',
-            'data': {
-                'x': 1,
-                'y': 2,
-                'z': 3
-            }
-        })
-        socket.sendall(request)
+        request = json.loads(connection.recv(1024))
+        print('Received request: %s' % str(request))
 
-        time.sleep(5)
+    print('Closing the connection...')
+    connection.close()
 
     print('Terminating the simulator...')
-    socket.close()
+    server.close()
 
+if __name__ == '__main__':
+    main()

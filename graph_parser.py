@@ -2,7 +2,7 @@
 # TODO: Rename to firstNodeId and secondNodeId since bidirectional roads are implied
 from mdp import SSP
 
-def generate(graph, start_state, goal_state):
+def get_ssp(graph, start_state, goal_state):
     states = get_states(graph)
     get_actions = get_action_function(graph, states)
     get_transition_probabilities = get_transition_function(states, get_actions)
@@ -17,6 +17,9 @@ def generate(graph, start_state, goal_state):
         start_state,
         goal_state
     )
+
+def get_state(graph, ssp, coordinates):
+    pass
 
 def get_states(graph):
     return [node[u'id'] for node in graph[u'nodes']]

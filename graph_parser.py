@@ -1,6 +1,7 @@
 # TODO: Clean up unicode attributes
 # TODO: Rename to firstNodeId and secondNodeId since bidirectional roads are implied
 from mdp import SSP
+import direction_calculator
 
 def get_ssp(graph, start_state, goal_state):
     states = get_states(graph)
@@ -18,8 +19,14 @@ def get_ssp(graph, start_state, goal_state):
         goal_state
     )
 
-def get_state(graph, ssp, coordinates):
-    pass
+def get_turn(graph, action):
+    start_node = get_node(graph, action[0])
+    end_node = get_node(graph, action[1])
+
+    start_vector = (start_node[u'x'], start_node[u'y'])
+    end_vector = (end_node[u'x'], end_node[u'y'])
+
+    return direction_calculator.get_turn(start_vector, end_vector)
 
 def get_states(graph):
     return [node[u'id'] for node in graph[u'nodes']]
@@ -68,6 +75,12 @@ def get_cost_function(graph, states, get_actions, goal_state):
         return costs[state][action]
 
     return get_cost
+
+def get_node(graph, id):
+    for node in graph[u'nodes']:
+        if id == node[u'id']:
+            return node
+    return None
 
 def get_key(state):
     return state

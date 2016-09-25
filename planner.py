@@ -7,9 +7,9 @@ from mdp import RTDP
 SERVICE_IP_ADDRESS = '127.0.0.1'
 SERVICE_PORT = 8002
 
-GRAPH_FILE = 'graphs/example-graph-1.json'
-START_STATE = 1
-GOAL_STATE = 5
+GRAPH_FILE = 'graphs/example-graph-2.json'
+START_STATE = 0
+GOAL_STATE = 6
 
 def main():
     print('Reading graph data...')
@@ -31,8 +31,13 @@ def main():
 
     print('Entering action loop...')
     while current_state != GOAL_STATE:
-        action = policy[current_state]
-        direction = graph_parser.get_turn(graph, action)
+        current_action = policy[current_state]
+
+        next_state = current_action[1]
+        next_action = policy[next_state]
+
+        direction = graph_parser.get_turn(graph, current_action, next_action)
+
         request = request_generator.get_control_request(direction)    
         server.sendall(request)
         print('Send control request: %s' % str(request))
@@ -44,7 +49,7 @@ def main():
             print('Terminating the planner due to a failure...')
             break
 
-        current_state = action[1]
+        current_state = next_state
 
     print('The simulator reached the goal state!')
 

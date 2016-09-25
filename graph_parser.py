@@ -1,5 +1,6 @@
 # TODO: Clean up unicode attributes
 # TODO: Rename to firstNodeId and secondNodeId since bidirectional roads are implied
+import numpy as np
 from mdp import SSP
 import direction_calculator
 
@@ -19,14 +20,21 @@ def get_ssp(graph, start_state, goal_state):
         goal_state
     )
 
-def get_turn(graph, action):
-    start_node = get_node(graph, action[0])
-    end_node = get_node(graph, action[1])
+def get_turn(graph, current_action, next_action):
+    current_start_node = get_node(graph, current_action[0])
+    current_end_node = get_node(graph, current_action[1])
+    next_start_node = get_node(graph, next_action[0])
+    next_end_node = get_node(graph, next_action[1])
 
-    start_vector = (start_node[u'x'], start_node[u'y'])
-    end_vector = (end_node[u'x'], end_node[u'y'])
+    current_start_vector = (current_start_node[u'x'], current_start_node[u'y'])
+    current_end_vector = (current_end_node[u'x'], current_end_node[u'y'])
+    next_start_vector = (next_start_node[u'x'], next_start_node[u'y'])
+    next_end_vector = (next_end_node[u'x'], next_end_node[u'y'])
 
-    return direction_calculator.get_turn(start_vector, end_vector)
+    current_direction_vector = np.subtract(current_start_vector, current_end_vector)
+    next_direction_vector = np.subtract(next_start_vector, next_end_vector)
+
+    return direction_calculator.get_turn(next_direction_vector, current_direction_vector)
 
 def get_states(graph):
     return [node[u'id'] for node in graph[u'nodes']]

@@ -12,6 +12,7 @@ ANGLE_DIRECTION_MAP = {
 ANGLE_TURN_MAP = {
     0: 'straight',
     90: 'right',
+    180: 'stay',
     270: 'left'
 }
 

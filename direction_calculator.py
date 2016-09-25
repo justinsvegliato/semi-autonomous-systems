@@ -1,6 +1,6 @@
 import numpy as np
 
-EAST_VECTOR = (1, 0)
+MAIN_VECTOR = (1, 0)
 
 ANGLE_DIRECTION_MAP = {
     0: 'E',
@@ -12,7 +12,7 @@ ANGLE_DIRECTION_MAP = {
 ANGLE_TURN_MAP = {
     0: 'straight',
     90: 'right',
-    180: 'stay',
+    180: 'stop',
     270: 'left'
 }
 
@@ -25,11 +25,14 @@ def get_angle(vector_1, vector_2):
 
     angle1 = np.arctan2(*unit_vector_1[::-1])
     angle2 = np.arctan2(*unit_vector_2[::-1])
+    difference = angle2 - angle1
 
-    return np.rad2deg((angle2 - angle1) % (2 * np.pi))
+    normalizer = 2 * np.pi
+
+    return np.rad2deg(difference % normalizer)
 
 def get_approximate_direction(vector):
-    angle = get_angle(EAST_VECTOR, vector)
+    angle = get_angle(MAIN_VECTOR, vector)
     return min(ANGLE_DIRECTION_MAP, key=lambda x:abs(x - angle))
 
 def get_turn(vector_1, vector_2):

@@ -34,38 +34,38 @@
   "edges": [
     {
       "id": 0,
-      "startNodeId": 0,
-      "endNodeId": 1,
+      "firstNodeId": 0,
+      "secondNodeId": 1,
       "weight": 795.6785673009077
     },
     {
       "id": 1,
-      "startNodeId": 1,
-      "endNodeId": 2,
+      "firstNodeId": 1,
+      "secondNodeId": 2,
       "weight": 1187.3274167390082
     },
     {
       "id": 2,
-      "startNodeId": 2,
-      "endNodeId": 3,
+      "firstNodeId": 2,
+      "secondNodeId": 3,
       "weight": 372.8174772087982
     },
     {
       "id": 3,
-      "startNodeId": 3,
-      "endNodeId": 4,
+      "firstNodeId": 3,
+      "secondNodeId": 4,
       "weight": 391.6768665850677
     },
     {
       "id": 4,
-      "startNodeId": 4,
-      "endNodeId": 5,
+      "firstNodeId": 4,
+      "secondNodeId": 5,
       "weight": 363.69795586677304
     },
     {
       "id": 5,
-      "startNodeId": 5,
-      "endNodeId": 2,
+      "firstNodeId": 5,
+      "secondNodeId": 2,
       "weight": 416.3190178422999
     }
   ]

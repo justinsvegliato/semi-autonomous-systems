@@ -11,7 +11,7 @@ def get_control_request(action):
         'id': id,
         'type': 'control',
         'action': action
-    });
+    })
 
     update_id()
 
@@ -21,7 +21,7 @@ def get_location_request():
     request = json.dumps({
         'id': id,
         'type': 'location'
-    });
+    })
 
     update_id()
 

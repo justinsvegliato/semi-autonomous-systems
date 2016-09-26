@@ -17,7 +17,7 @@ def main():
         request = json.loads(connection.recv(1024))
         print('Received request: %s' % str(request))
 
-        response = json.dumps({'id': request[u'id'], 'status': 'success'})
+        response = json.dumps({'id': request['id'], 'status': 'success'})
         connection.sendall(response)
         print('Sent response: %s' % response)
 

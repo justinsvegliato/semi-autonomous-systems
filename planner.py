@@ -1,12 +1,12 @@
+#!/usr/bin/env python
 import socket
 import json
 import argparse
 import graph_parser
-import request_generator
-from mdp import RTDP
+#from mdp import RTDP
 
 SERVICE_IP_ADDRESS = '127.0.0.1'
-SERVICE_PORT = 8002
+SERVICE_PORT = 8003
 
 def main():
     graph_file = args.world
@@ -17,40 +17,34 @@ def main():
     with open(graph_file) as file:
         graph = json.load(file)
 
-    print('Generating the SSP...')
-    ssp = graph_parser.get_ssp(graph, start_state, goal_state)
+    #print('Generating the SSP...')
+    #ssp = graph_parser.get_ssp(graph, start_state, goal_state)
 
-    policy = ssp.solve(solver=RTDP())
+    # policy = ssp.solve(solver=RTDP())
+    policy = {0: (0, 1), 1: (1, 2), 2: (2, 3), 3: (3, 4), 4: (4, 5), 5: (5, 6), 6: (6, 7), 7: (7, 8), 8: (8, 9), 9: (9, 10), 10: (10, 9)}
     print 'Calculated the policy: %s' % policy
 
     print('Connecting to the simulator...')
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.connect((SERVICE_IP_ADDRESS, SERVICE_PORT))
 
-    current_state = start_state
-    print('Assigned the state state: %s' % current_state)
+    current_state = None
 
-    print('Entering the drive loop...')
+    print('Entering the driving loop...')
     while current_state != goal_state:
-        current_action = policy[current_state]
+        location = json.loads(server.recv(1024))
 
-        next_state = current_action[1]
-        next_action = policy[next_state]
+        if current_state is None or graph_parser.has_turned(graph, current_action, next_action, location['x'], location['y']):
+            current_state = start_state if current_state is None else next_state
+            current_action = policy[current_state]
 
-        direction = graph_parser.get_turn(graph, current_action, next_action)
+            next_state = current_action[1]
+            next_action = policy[next_state]
 
-        request = request_generator.get_control_request(direction)
-        server.sendall(request)
-        print('Sent a control request: %s' % request)
+            direction = graph_parser.get_turn(graph, current_action, next_action)
 
-        response = json.loads(server.recv(1024))
-        print('Received a response: %s' % response)
-
-        if response['status'] == 'failure':
-            print('Terminating the planner due to a failure...')
-            break
-
-        current_state = next_state
+            server.sendall(direction)
+            print('Sent direction: %s' % direction)
 
     print('Reached the goal state: %s' % goal_state)
 

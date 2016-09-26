@@ -1,8 +1,10 @@
+#!/usr/bin/env python
 import socket
 import json
+import time
 
 IP_ADDRESS = '127.0.0.1'
-PORT = 8002
+PORT = 8003
 
 def main():
     print('Starting the simulator...')
@@ -14,12 +16,11 @@ def main():
     (connection, ip_address) = server.accept()
 
     while True:
-        request = json.loads(connection.recv(1024))
-        print('Received request: %s' % str(request))
+        location = json.dumps({'x': 5, 'y': 3});
+        connection.sendall(location)
+        print('Sent location: %s' % location)
 
-        response = json.dumps({'id': request['id'], 'status': 'success'})
-        connection.sendall(response)
-        print('Sent response: %s' % response)
+        time.sleep(1)
 
     print('Closing the connection...')
     connection.close()

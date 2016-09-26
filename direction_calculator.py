@@ -10,10 +10,10 @@ ANGLE_DIRECTION_MAP = {
 }
 
 ANGLE_TURN_MAP = {
-    0: 'straight',
-    90: 'right',
-    180: 'stop',
-    270: 'left'
+    0: '0',
+    90: '1',
+    180: '2',
+    270: '-1'
 }
 
 def get_unit_vector(vector):

@@ -2,10 +2,12 @@
 import direction_calculator
 import numpy as np
 
+
 def get_turn(graph, current_action, next_action):
     current_direction_vector = get_direction(graph, current_action)
     next_direction_vector = get_direction(graph, next_action)
     return direction_calculator.get_turn(next_direction_vector, current_direction_vector)
+
 
 def get_ssp(graph, start_state, goal_state):
     states = get_states(graph)
@@ -23,8 +25,10 @@ def get_ssp(graph, start_state, goal_state):
         goal_state
     )
 
+
 def get_states(graph):
     return [node['id'] for node in graph['nodes']]
+
 
 def get_actions_function(graph, states):
     state_action_map = {}
@@ -41,6 +45,7 @@ def get_actions_function(graph, states):
 
     return lambda s: state_action_map[s]
 
+
 def get_transition_probabilities_function(states, get_actions):
     transition_probabilities = {}
     for state in states:
@@ -50,6 +55,7 @@ def get_transition_probabilities_function(states, get_actions):
 
     return lambda s, a: transition_probabilities[s][a]
 
+
 def get_cost_function(graph, states, get_actions, goal_state):
     costs = {}
     for state in states:
@@ -58,19 +64,23 @@ def get_cost_function(graph, states, get_actions, goal_state):
             for edge in graph['edges']:
                 first_node_id = edge['firstNodeId']
                 second_node_id = edge['secondNodeId']
-                if action[0] == first_node_id and action[1] == second_node_id or action[0] == second_node_id and action[1] == first_node_id:
+                if action[0] == first_node_id and action[1] == second_node_id or action[0] == second_node_id and action[
+                    1] == first_node_id:
                     costs[state][action] = edge['weight'] if state != goal_state else 0
 
     return lambda s, a: costs[s][a]
 
+
 def get_key(state):
     return state
+
 
 def get_node(graph, id):
     for node in graph['nodes']:
         if id == node['id']:
             return node
     return None
+
 
 def get_direction(graph, action):
     start_node = get_node(graph, action[0])
@@ -80,6 +90,7 @@ def get_direction(graph, action):
     end_vector = (end_node['x'], end_node['y'])
 
     return np.subtract(end_vector, start_vector)
+
 
 def get_distance(graph, state, location):
     next_node = get_node(graph, state)

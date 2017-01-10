@@ -9,10 +9,11 @@ SERVICE_PORT = 5010
 MARGIN = 5
 DISTANCE_THRESHOLD = 20
 
+
 def main():
-    graph_file = 'graphs/example-graph.json' #args.world
-    start_state = 1 #args.start_state
-    goal_state = 15 #args.goal_state
+    graph_file = 'graphs/example-graph.json'  # args.world
+    start_state = 1  # args.start_state
+    goal_state = 15  # args.goal_state
 
     print('Reading the graph data...')
     with open(graph_file) as file:
@@ -33,10 +34,7 @@ def main():
     step_distance = float('inf')
 
     current_state = None
-    current_action = None
-
     next_state = None
-    next_action = None
 
     print('Entering the driving loop...')
     while total_distance > DISTANCE_THRESHOLD:
@@ -83,10 +81,10 @@ def main():
     server.close()
 
 if __name__ == '__main__':
-    #parser = argparse.ArgumentParser(description='Control a vehicle in a simulated world.')
-    #parser.add_argument('world', metavar='world', help='the file that contains the world')
-    #parser.add_argument('start_state', metavar='start_state', type=int, help='the start state of the world')
-    #parser.add_argument('goal_state', metavar='goal_state', type=int, help='the goal state of the world')
-    #args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description='Control a vehicle in a simulated world.')
+    # parser.add_argument('world', metavar='world', help='the file that contains the world')
+    # parser.add_argument('start_state', metavar='start_state', type=int, help='the start state of the world')
+    # parser.add_argument('goal_state', metavar='goal_state', type=int, help='the goal state of the world')
+    # args = parser.parse_args()
 
     main()

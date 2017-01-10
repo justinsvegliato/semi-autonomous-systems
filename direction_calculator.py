@@ -16,8 +16,10 @@ ANGLE_TURN_MAP = {
     270: 3
 }
 
+
 def get_unit_vector(vector):
     return vector / np.linalg.norm(vector)
+
 
 def get_angle(vector_1, vector_2):
     unit_vector_1 = get_unit_vector(vector_1)
@@ -31,9 +33,11 @@ def get_angle(vector_1, vector_2):
 
     return np.rad2deg(difference % normalizer)
 
+
 def get_approximate_direction(vector):
     angle = get_angle(MAIN_VECTOR, vector)
-    return min(ANGLE_DIRECTION_MAP, key=lambda x:abs(x - angle))
+    return min(ANGLE_DIRECTION_MAP, key=lambda x: abs(x - angle))
+
 
 def get_turn(vector_1, vector_2):
     current_direction = get_approximate_direction(vector_1)

@@ -1,4 +1,4 @@
-from mdp import SSP
+# from mdp import SSP
 import direction_calculator
 import numpy as np
 
@@ -79,33 +79,12 @@ def get_direction(graph, action):
     end_node = get_node(graph, action[1])
     end_vector = (end_node['x'], end_node['y'])
 
-    return start_vector[0] - end_vector[0], start_vector[1] - end_vector[1]
+    return np.subtract(end_vector, start_vector)
 
-def has_turned(graph, current_action, next_action, x, y):
-    current_direction_vector = get_direction(graph, current_action)
-    next_direction_vector = get_direction(graph, next_action)
+def get_distance(graph, state, location):
+    next_node = get_node(graph, state)
+    next_location = (next_node['x'], next_node['y'])
 
-    current_projection = project_onto_plane((x, y), current_direction_vector)
-    next_projection = project_onto_plane((x, y), next_direction_vector)
+    difference = np.subtract(next_location, location)
 
-    current_distance = np.linalg.norm(np.subtract((x, y), current_projection))
-    next_distance = np.linalg.norm(np.subtract((x, y), next_projection))
-
-    return next_distance < current_distance
-
-# TODO: Clean this stuff up - putting this here just to get it done
-from math import sqrt
-
-def dot_product(x, y):
-    return sum([x[i] * y[i] for i in range(len(x))])
-
-def norm(x):
-    return sqrt(dot_product(x, x))
-
-def normalize(x):
-    return [x[i] / norm(x) for i in range(len(x))]
-
-def project_onto_plane(x, n):
-    d = dot_product(x, n) / norm(n)
-    p = [d * normalize(n)[i] for i in range(len(n))]
-    return [x[i] - p[i] for i in range(len(x))]
+    return np.linalg.norm(difference)
